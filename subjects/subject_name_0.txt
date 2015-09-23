@@ -1,0 +1,1 @@
+delay		angle1		angle3		angle2		ring3		type		ring2		ring1		RT		ts_r		fixated		choiceAngle		ts_p		choiceR		ts_b		MT		ts_f		ts_d		ts_e		choice_x		choice_y0.00		296.00		113.00		306.00		9.00		3.00		10.00		10.00		0.58		1442686117.30		1.00		-36.22		1442686116.27		-19.84		1442686113.78		0.14		1442686115.27		1442686117.28		1442686118.02		-1.07		-6.12
