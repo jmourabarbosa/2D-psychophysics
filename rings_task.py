@@ -11,6 +11,7 @@ from multiprocessing import Process, Value,Array
 from time import sleep,time
 from random import randrange
 from TrialHandler2 import TrialHandler2
+from pupil_support import *
 
 mouse_on=False
 dim_x=dim_y=800
@@ -23,117 +24,6 @@ FIXATION=1
 PRESENTATION=1
 
 colors=['green','blue','white', 'red', 'gold']
-
-
-#Pupil network setup
-port = "5000"
-localhost="tcp://127.0.0.1:"
-
-
-def test_pupil():
-
-    def test_pupil_aux():
-
-        context = zmq.Context()
-        socket = context.socket(zmq.SUB)
-        socket.connect(localhost+port)
-        socket.setsockopt(zmq.SUBSCRIBE, '')
-
-        msg = socket.recv()
-        print "msg",msg
-
-    p=Process(target=test_pupil_aux)
-    p.start()
-    sleep(0.1)
-
-
-    if p.is_alive():
-        p.terminate()
-        return False
-
-    return True
-
-def read_pupil(finish):
-    pupil_data=[]
-    gaze_data=[]
-    
-    context = zmq.Context()
-    socket = context.socket(zmq.SUB)
-    socket.connect(localhost+port)
-    socket.setsockopt(zmq.SUBSCRIBE, '')
-    n_frame=0
-
-    while not finish.value:
-        msg = socket.recv()
-        items = msg.split("\n") 
-        msg_type = items.pop(0)   
-        if msg_type == 'Pupil':
-            pupil_data+=items
-
-        else:
-            gaze_data+=items
-
-    p_fid = open('pupil.pickle','w')
-    g_fid = open('gaze.pickle','w')
-
-    dump(pupil_data,p_fid)
-    dump(pupil_data,g_fid) 
-    p_fid.close()
-    g_fid.close()  
-
-def get_frame(socket):
-
-    msg = socket.recv()
-    items = msg.split("\n")
-    msg_type = items.pop(0)
-
-    msg = socket.recv()
-    items = msg.split("\n")
-    msg_type = items.pop(0)
-
-    return items
-
-def detect_sacc(v_tr):
-
-    context = zmq.Context()
-    socket = context.socket(zmq.SUB)
-    socket.connect(localhost+port)
-    socket.setsockopt(zmq.SUBSCRIBE, 'Gaze')
-
-    vel=[]
-    n_sacc=0
-    while detect.value:
-        n = 0
-        times=[0,0]
-        points = [0,0]
-        while n<2:
-            items = get_frame(socket)
-            times[n]=float(items[-2].split(":")[1])
-            point = items[0].split(":")
-            x=point[1].split(",")[0][1:]
-            y=point[1].split(",")[1][:-1]
-            points[n]=(float(x),float(y))
-            n+=1
-    
-        (x1,y1) = points[0]
-        (x2,y2) = points[1]
-        v = np.sqrt((x2-x1)**2 + (y2-y1)**2)/(times[1]-times[0])
-        #print v, v_tr
-    
-        if v > v_tr:
-            n_sacc+=1
-            print "saccade: ",n_sacc,v
-            fixated.value=0
-            vel.append(v)
-
-def detect_sacc_start(detector):
-    detect.value=True
-    detector[0].start() 
-
-def detect_sacc_stop(detector):
-    detect.value=False
-    detector[0] = Process(target=detect_sacc, args=(v_tr,))
-    fixated.value=1
 
 
 def exit_task():
@@ -166,16 +56,15 @@ def say_msg(message,duration,win):
         win.flip()
 
 
-finish = Value('i',0)
-detect = Value('i',0)
-fixated = Value('i',1)
+
+
+
 v_tr=0.5
 
-record=Process(target=read_pupil,args=(finish,))
-detector=[Process(target=detect_sacc, args=(v_tr,))]
 
 
 if __name__ == "__main__":
+    
 
     info = {'Velocity threshold':'0.5'}
     infoDlg = gui.DlgFromDict(dictionary=info, title='WM experiment')
@@ -189,6 +78,9 @@ if __name__ == "__main__":
     if infoDlg.OK:
         subject_name=info['Subject']
     if infoDlg.OK==False: core.quit() #user pressed cancel
+
+    pupil = Pupil(subject_name=subject_name,v_tr=v_tr)
+    pupil_on = pupil.test_pupil()
 
     mywin = visual.Window([dim_x, dim_y],monitor="testMonitor", fullscr=fullscr, units="cm") #create a window full screen
     mouse=event.Mouse(win=mywin)
@@ -237,22 +129,41 @@ if __name__ == "__main__":
     totalClock = core.Clock()
 
     totalClock.reset()
-    pupil=test_pupil()
 
-    if pupil: record.start()
+    if pupil_on: pupil.record.start()
 
     while not trials.empty():
+        
         thisTrial = trials.next_trial()
-
         ts_b = time()
-        # sync period
+
+        shuffle(colors)
+        color=colors[0]
+        r=thisTrial['ring1']
+        x,y=toCar(r,thisTrial['angle1'])
+        stim1 = visual.PatchStim(win=mywin,size=0.8, mask='circle',pos=[x,y], sf=0,color=color,units='cm')
+            
+        color=colors[1]
+        r=thisTrial['ring2']
+        x,y=toCar(r,thisTrial['angle2'])
+        stim2 = visual.PatchStim(win=mywin, size=0.8, mask='circle',pos=[x,y], sf=0,color=color,units='cm')
+        
+        color=colors[2]
+        r=thisTrial['ring3']
+        x,y=toCar(r,thisTrial['angle3'])
+        stim3 = visual.PatchStim(win=mywin, size=0.8, mask='circle',pos=[x,y], sf=0,color=color,units='cm')
+        delay=thisTrial['delay']
+
+
+        # SYNC PERIOD
         fixation = visual.PatchStim(win=mywin, mask='gauss', size=0.5, pos=[0,0], sf=0, color='black')
         fixation.draw()
         mywin.update()
 
         mouse.clickReset()
         while mouse.getPressed()[0]==0:
-            pass#wait for a button to be pressed
+            #wait for a button to be pressed
+            pass
         
         x,y=mouse.getPos()
         while not ( abs(x) < 0.5 and abs(y) < 0.5):
@@ -272,27 +183,8 @@ if __name__ == "__main__":
             pass
         
         if event.getKeys("escape"): exit_task()
-
-        shuffle(colors)
-        color=colors[0]
-        r=thisTrial['ring1']
-        x,y=toCar(r,thisTrial['angle1'])
-        stim1 = visual.PatchStim(win=mywin,size=0.8, mask='circle',pos=[x,y], sf=0,color=color,units='cm')
-            
-        color=colors[1]
-        r=thisTrial['ring2']
-        x,y=toCar(r,thisTrial['angle2'])
-        stim2 = visual.PatchStim(win=mywin, size=0.8, mask='circle',pos=[x,y], sf=0,color=color,units='cm')
         
-        color=colors[2]
-        r=thisTrial['ring3']
-        x,y=toCar(r,thisTrial['angle3'])
-        stim3 = visual.PatchStim(win=mywin, size=0.8, mask='circle',pos=[x,y], sf=0,color=color,units='cm')
-        
-        #delay period
-        delay=thisTrial['delay']
-        
-        #start the trial with fixation
+        # FIXATION PERIOD
         t=0
         trialClock.reset()
         ts_f = time()
@@ -301,22 +193,22 @@ if __name__ == "__main__":
         mywin.flip()
         sleep(0.1) # give 100ms for the subject to refixate
 
-        if pupil: detect_sacc_start(detector)
+        if pupil_on: pupil.detect_sacc_start()
 
         while t<FIXATION:
-            if not fixated.value:
+            if not pupil.fixated.value:
                 break
             fixation.draw()
             mywin.flip()
             t=trialClock.getTime()    
 
       
-        #draw the stimuli and update the window for the duration of stimulus presentation
+        # STIMULUS PRESENTATION PERIOD
         t=0
         trialClock.reset()
         ts_p = time()
         while t<PRESENTATION:
-            if not fixated.value:
+            if not pupil.fixated.value:
                 break
             if event.getKeys("escape"): exit_task()
             fixation.draw()
@@ -326,29 +218,29 @@ if __name__ == "__main__":
             mywin.flip()
             t=trialClock.getTime()
        
-        #delay period
+        # DELAY PERIOD
         t=0
         trialClock.reset()
         ts_d=time()
         while t<delay:
-            if not fixated.value:
+            if not pupil.fixated.value:
                 break
             if event.getKeys("escape"): exit_task()
             fixation.draw()
             mywin.flip()
             t=trialClock.getTime()
 
-        trials.add_data('fixated', fixated.value)
+        trials.add_data('fixated', pupil.fixated.value)
 
-        if not fixated.value:
+        if not pupil.fixated.value:
             trials.repeat_trial(thisTrial)
-            if pupil: detect_sacc_stop(detector)
+            if pupil_on: pupil.detect_sacc_stop()
             say_msg("Please, fixate on the center of the screen",2,mywin)
             continue
 
-        if pupil: detect_sacc_stop(detector)
+        if pupil_on: pupil.detect_sacc_stop()
       
-        #response period
+        # RESPONDE PERIOD
         choice_trial=0
         event.clearEvents()
         fixation.setColor(colors[0])
@@ -379,7 +271,7 @@ if __name__ == "__main__":
         mtime = trialClock.getTime()
         choice_pos=stim1.pos - pos
         choice_angle=getAngle(pos)-getAngle(stim1.pos)
-        choice_R=norm(pos)-(thisTrial['ring1']*2+6)
+        choice_R=norm(pos)-(thisTrial['ring1'])
         
      
         trials.add_data('choice_x', choice_pos[0])
@@ -401,11 +293,8 @@ if __name__ == "__main__":
 
 
     trials.save_log()
-    finish.value=1
 
-    if pupil: record.join()
-
-
+    if pupil_on: pupil.record_stop()
 
     stim1.clearTextures()
     stim2.clearTextures()

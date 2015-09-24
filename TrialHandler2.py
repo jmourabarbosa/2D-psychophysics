@@ -26,7 +26,6 @@ class TrialHandler2(object):
 
     def empty(self):
         b=self.n_trials<self.inext_trial+1
-        if b: print "empty!"
         return b
 
     def next_trial(self):
