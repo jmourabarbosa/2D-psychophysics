@@ -21,6 +21,9 @@ class Pupil(object):
 		self.finish  = Value('i',1)
 
 		self.v_tr = Value('d',v_tr)
+		self.last_point = (0,0)
+		self.last_time = 0.0
+		
 		self.pupil_data=[]
 		self.gaze_data=[]
 
@@ -112,18 +115,33 @@ class Pupil(object):
 
 		vel=[]
 		n_sacc=0
+
+		items = self.get_frame(socket)
+		time=float(items[-2].split(":")[1])
+		self.last_time = time
+		
+		point = items[0].split(":")
+		x=point[1].split(",")[0][1:]
+		y=point[1].split(",")[1][:-1]
+		point = (x,y)
+		self.last_point = point
+
 		while self.detect.value:
-			n = 0
-			times=[0,0]
-			points = [0,0]
-			while n<2:
-				items = self.get_frame(socket)
-				times[n]=float(items[-2].split(":")[1])
-				point = items[0].split(":")
-				x=point[1].split(",")[0][1:]
-				y=point[1].split(",")[1][:-1]
-				points[n]=(float(x),float(y))
-				n+=1
+			
+			items = self.get_frame(socket)
+			time=float(items[-2].split(":")[1])
+			
+			times = [self.last_time,time]
+			self.last_time = time
+
+			point = items[0].split(":")
+			x=point[1].split(",")[0][1:]
+			y=point[1].split(",")[1][:-1]
+			point = (x,y)
+
+			points = [self.last_point,point]
+			self.last_point = point
+			
 	    
 			(x1,y1) = points[0]
 			(x2,y2) = points[1]
