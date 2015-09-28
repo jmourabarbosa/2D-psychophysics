@@ -137,7 +137,7 @@ class Pupil(object):
 			point = items[0].split(":")
 			x=point[1].split(",")[0][1:]
 			y=point[1].split(",")[1][:-1]
-			point = (float(x),float(y)
+			point = (float(x),float(y))
 
 			points = [self.last_point,point]
 			self.last_point = point

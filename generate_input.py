@@ -25,7 +25,7 @@ R3=10
 Rs=[R1,R2,R3]
 
 #delta of proximity
-delta_t=[10,20]
+delta_t=[5,10,20]
 delay = [[0],[3]]
 
 

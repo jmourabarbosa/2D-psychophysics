@@ -47,19 +47,19 @@ def getAngle(v):
     return 180*a/math.pi
 
 def say_msg(message,duration,win):
+    print message
+    # msgClock=core.Clock()
+    # msgText=visual.TextStim(win=win, ori=0,
+    #     text=message,
+    #     pos=[0,0], height=1.5,
+    #     rgb=[1, 1, 1])
 
-    msgClock=core.Clock()
-    msgText=visual.TextStim(win=win, ori=0,
-        text=message,
-        pos=[0,0], height=1.5,
-        rgb=[1, 1, 1])
-
-    t=0
-    msgClock.reset()
-    while t<duration:
-        t=msgClock.getTime()            
-        msgText.draw()
-        win.flip()
+    # t=0
+    # msgClock.reset()
+    # while t<duration:
+    #     t=msgClock.getTime()            
+    #     msgText.draw()
+    #     win.flip()
 
 
 v_tr=0.5
@@ -101,7 +101,6 @@ if __name__ == "__main__":
         angle1=line[3]
         ring2=line[4]
         angle2=line[5]
-
 
         stimList.append( 
         {'delay':float(delay), 'type':float(type), 'angle1':float(angle1),'ring1':float(ring1),
@@ -153,7 +152,6 @@ if __name__ == "__main__":
         r=thisTrial['ring2']
         x,y=toCar(r,thisTrial['angle2'])
         stim2 = visual.PatchStim(win=mywin, size=0.8, mask='circle',pos=[x,y], sf=0,color=color,units='cm')
-
 
 
         # SYNC PERIOD
