@@ -16,17 +16,20 @@ IN=3
 OUT=4
 
 codes = ["CTRL","CW", "CCW", "IN","OUT"]
+
+#delta of proximity
+delta_t=[8,12,14]
+
 #rings
+
 R1=8
-R2=9
-R3=10
+dr=np.round(R1*math.sin(delta_t[1]/180.0*math.pi),1)
+R2=R1+dr
+R3=R1+2*dr
 
 Rs=[R1,R2,R3]
 
-#delta of proximity
-delta_t=[5,10,15]
 delays = [[0],[3]]
-
 ri=30
 rf=60
 
