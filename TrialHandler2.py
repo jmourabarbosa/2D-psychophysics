@@ -6,17 +6,19 @@ from random import randrange
 
 class TrialHandler2(object):
 
-    def __init__(self,trial_list=[],data_dict=[],subject_name='subject_name',pdir='subjects'):
+    def __init__(self,trial_list=[],data_dict=[],subject_name='subject_name',pdir='subjects_behavior'):
         self.data_dict = {}
         self.trial_list = trial_list
         self.inext_trial = 0
         self.n_trials = len(trial_list)
         self.subject = subject_name
         self.dir = pdir
-        n=0
-        while os.path.exists(pdir+"/"+self.subject): 
-            n+=1
-        self.log_path=self.dir+"/"+self.subject+"_"+str(n)
+
+        if os.path.exists(pdir+"/"+self.subject):
+            n=0
+            while os.path.exists(pdir+"/"+self.subject+str(n)): 
+                n+=1
+            self.log_path=self.dir+"/"+self.subject+"_"+str(n)
     
     def add_type(self,key):
         self.data_dict[key]=[]

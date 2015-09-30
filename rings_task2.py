@@ -17,8 +17,6 @@ mouse_on=False
 dim_x=dim_y=800
 fullscr=False
 
-p_dir = "subjects"
-
 # TIMES
 FIXATION=1
 PRESENTATION=1
@@ -177,9 +175,9 @@ if __name__ == "__main__":
         fixation.draw()
         mywin.update()
         
-        #wait for mouse button to get release
-        while mouse.getPressed()[0]==1:
-            pass
+        # #wait for mouse button to get release
+        # while mouse.getPressed()[0]==1:
+        #     pass
         
         if event.getKeys("escape"): exit_task()
         
