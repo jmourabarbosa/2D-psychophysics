@@ -45,19 +45,18 @@ def getAngle(v):
     return 180*a/math.pi
 
 def say_msg(message,duration,win):
-    print message
-    # msgClock=core.Clock()
-    # msgText=visual.TextStim(win=win, ori=0,
-    #     text=message,
-    #     pos=[0,0], height=1.5,
-    #     rgb=[1, 1, 1])
+    msgClock=core.Clock()
+    msgText=visual.TextStim(win=win, ori=0,
+        text=message,
+        pos=[0,0], height=1.5,
+        rgb=[1, 1, 1])
 
-    # t=0
-    # msgClock.reset()
-    # while t<duration:
-    #     t=msgClock.getTime()            
-    #     msgText.draw()
-    #     win.flip()
+    t=0
+    msgClock.reset()
+    while t<duration:
+        t=msgClock.getTime()            
+        msgText.draw()
+        win.flip()
 
 
 v_tr=0.5
