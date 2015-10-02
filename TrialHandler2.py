@@ -12,14 +12,15 @@ class TrialHandler2(object):
         self.inext_trial = 0
         self.n_trials = len(trial_list)
         self.subject = subject_name
-        self.dir = pdir
+        self.dir = pdir+"/"+self.subject
         self.log_path=self.dir+"/"+self.subject
 
-        if os.path.exists(pdir+"/"+self.subject):
+        if os.path.exists(self.dir):
             n=0
-            while os.path.exists(pdir+"/"+self.subject+str(n)): 
+            while os.path.exists(self.dir+str(n)): 
                 n+=1
-            self.log_path=self.dir+"/"+self.subject+"_"+str(n)
+            self.log_path=self.dir+str(n)+"/"+self.subject
+
     
     def add_type(self,key):
         self.data_dict[key]=[]

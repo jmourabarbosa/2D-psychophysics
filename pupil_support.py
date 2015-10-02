@@ -16,6 +16,7 @@ class Pupil(object):
 		self.port = str(port)
 		self.ip=ip
 
+		self.log_path=log_path
 		self.detect = Value('i',0)
 		self.fixated = Value('i',1)
 		self.finish  = Value('i',1)
@@ -60,7 +61,7 @@ class Pupil(object):
 
 		return True
 
-	def read_pupil(self,log_path="subject"):
+	def read_pupil(self):
 
 		context = zmq.Context()
 		socket = context.socket(zmq.SUB)
@@ -78,10 +79,11 @@ class Pupil(object):
 			else:
 				self.gaze_data+=items
 
-		self.write_log(log_name)
+		self.write_log()
 
-	def write_log(self,log_name="subject"):
+	def write_log(self):
 
+		log_name=self.log_path
 		if self.record.is_alive:
 			self.record_stop()
 
