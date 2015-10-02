@@ -102,10 +102,6 @@ class Pupil(object):
 		items = msg.split("\n")
 		msg_type = items.pop(0)
 
-		msg = socket.recv()
-		items = msg.split("\n")
-		msg_type = items.pop(0)
-
 		return items
 
 	def detect_sacc(self):
