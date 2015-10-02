@@ -10,7 +10,7 @@ from TrialHandler2 import TrialHandler2
 
 class Pupil(object):
 
-	def __init__(self,port=5000,ip="tcp://127.0.0.1",v_tr=0.5,subject_name="subject"):
+	def __init__(self,port=5000,ip="tcp://127.0.0.1",v_tr=0.5,log_path="subject"):
 		
 		#Pupil network setup
 		self.port = str(port)
@@ -27,7 +27,7 @@ class Pupil(object):
 		self.pupil_data=[]
 		self.gaze_data=[]
 
-		self.record=Process(target=self.read_pupil,args=(subject_name,))
+		self.record=Process(target=self.read_pupil,args=(log_path,))
 		self.detector=Process(target=self.detect_sacc)
 
 	def record_start(self):
@@ -60,7 +60,7 @@ class Pupil(object):
 
 		return True
 
-	def read_pupil(self,log_name="subject"):
+	def read_pupil(self,log_path="subject"):
 
 		context = zmq.Context()
 		socket = context.socket(zmq.SUB)

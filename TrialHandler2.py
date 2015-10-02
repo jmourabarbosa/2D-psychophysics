@@ -13,6 +13,7 @@ class TrialHandler2(object):
         self.n_trials = len(trial_list)
         self.subject = subject_name
         self.dir = pdir
+        self.log_path=self.dir+"/"+self.subject
 
         if os.path.exists(pdir+"/"+self.subject):
             n=0
@@ -34,6 +35,8 @@ class TrialHandler2(object):
 
         trial = self.trial_list[self.inext_trial]
         self.inext_trial+=1
+        #if self.inext_trial > 1:
+        #self.save_log()
         return trial
 
     # Assumies logging of repetition reason is done inside the main loop
@@ -57,31 +60,34 @@ class TrialHandler2(object):
         self.trial_list.insert(new_pos,trial)
         return True
 
-    def save_log(self, only_matrix=False, append=False, file=None):
+    def save_log(self, only_matrix=False, file=None):
 
         if not os.path.isdir(self.dir):
             os.makedirs(self.dir)
 
         # How data will appear: tab delim and 2 decimals
-        form_stims = "\t\t".join(['%.2f']*len(self.trial_list[0]) )
-        form_data = "\t\t".join(['%.2f']*len(self.data_dict))
+        form_stims = "\t".join(['%.2f']*len(self.trial_list[0]) )
+        form_data = "\t".join(['%.2f']*len(self.data_dict))
 
-        header = "\t\t".join(self.trial_list[0].keys() + self.data_dict.keys())
+        header = "\t".join(self.trial_list[0].keys() + self.data_dict.keys())
+
         
         body_stims = [form_stims % tuple(t.values()) for t in self.trial_list]
         
         data = np.array(self.data_dict.values())
-        body_data  = [form_data % tuple(data[:,n]) for n in range(self.n_trials)]
+        #body_data  = [form_data % tuple(data[:,n]) for n in range(self.n_trials)]
+        body_data  = [form_data % tuple(data[:,n]) for n in range(self.inext_trial)]
 
-        body = "\n".join([body_stims[t] + "\t\t" + body_data[t] for t in range(self.n_trials)])
-
+        #body = "\n".join([body_stims[t] + "\t\t" + body_data[t] for t in range(self.n_trials)])
+        body = "\n".join([body_stims[t] + "\t" + body_data[t] for t in range(self.inext_trial)])
+        print self.inext_trial - self.n_trials
         fid = open(self.log_path+'.pickle','w')
         dump(self,fid)
         fid.close()
 
         fid = open(self.log_path+'.txt','w')
-        fid.write(header)
-        fid.write(body)
+        fid.write(header+"\n")
+        fid.write(body+"\n")
         fid.close()
 
         print header

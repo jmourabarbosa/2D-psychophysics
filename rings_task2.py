@@ -15,7 +15,7 @@ from pupil_support import *
 
 mouse_on=False
 dim_x=dim_y=800
-fullscr=True
+fullscr=False
 
 # TIMES
 FIXATION=1
@@ -78,9 +78,6 @@ if __name__ == "__main__":
         subject_name=info['Subject']
     if infoDlg.OK==False: core.quit() #user pressed cancel
 
-    pupil = Pupil(subject_name=subject_name,v_tr=v_tr)
-    pupil_on = pupil.test_pupil()
-
     mywin = visual.Window([dim_x, dim_y],monitor="testMonitor", fullscr=fullscr, units="cm") #create a window full screen
     mouse=event.Mouse(win=mywin)
     mouse.setVisible(mouse_on)
@@ -106,6 +103,9 @@ if __name__ == "__main__":
     stim_input.close()
     #organise the trials 
     trials = TrialHandler2(trial_list = stimList,subject_name=subject_name)
+
+    pupil = Pupil(log_path=trials.log_path,v_tr=v_tr)
+    pupil_on = pupil.test_pupil()
 
     trials.add_type('choice_x')
     trials.add_type('choice_y')
