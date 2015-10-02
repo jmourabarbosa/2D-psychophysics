@@ -28,7 +28,7 @@ class Pupil(object):
 		self.pupil_data=[]
 		self.gaze_data=[]
 
-		self.record=Process(target=self.read_pupil,args=(log_path,))
+		self.record=Process(target=self.read_pupil)
 		self.detector=Process(target=self.detect_sacc)
 
 	def record_start(self):
