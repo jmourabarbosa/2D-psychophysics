@@ -91,10 +91,9 @@ class Pupil(object):
 		p_fid = open(log_name+'_pupil.pickle','w')
 		g_fid = open(log_name+'_gaze.pickle','w')
 
-		print "recording ",log_name+'_pupil.pickle'
 		dump(self.pupil_data,p_fid)
-		dump(self.pupil_data,g_fid) 
-		print "recorded. closing."
+		dump(self.gaze_data,g_fid) 
+		
 		p_fid.close()
 		g_fid.close()  
 
