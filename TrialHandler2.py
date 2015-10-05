@@ -17,9 +17,9 @@ class TrialHandler2(object):
 
         if os.path.exists(self.dir):
             n=0
-            while os.path.exists(self.dir+str(n)): 
+            while os.path.exists(self.log_path+str(n)): 
                 n+=1
-            self.log_path=self.dir+str(n)+"/"+self.subject
+            self.log_path=self.log_path+str(n)
 
     
     def add_type(self,key):
@@ -81,7 +81,6 @@ class TrialHandler2(object):
 
         #body = "\n".join([body_stims[t] + "\t\t" + body_data[t] for t in range(self.n_trials)])
         body = "\n".join([body_stims[t] + "\t" + body_data[t] for t in range(self.inext_trial)])
-        print self.inext_trial - self.n_trials
         fid = open(self.log_path+'.pickle','w')
         dump(self,fid)
         fid.close()
@@ -91,5 +90,5 @@ class TrialHandler2(object):
         fid.write(body+"\n")
         fid.close()
 
-        print header
-        print body
+        #print header
+        #print body

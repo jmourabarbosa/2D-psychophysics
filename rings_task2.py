@@ -15,7 +15,7 @@ from pupil_support import *
 
 mouse_on=False
 dim_x=dim_y=800
-fullscr=True
+fullscr=False
 
 # TIMES
 FIXATION=1
@@ -127,7 +127,7 @@ if __name__ == "__main__":
 
     totalClock.reset()
 
-    if pupil_on: pupil.record.start()
+    if pupil_on: pupil.record_start()
 
     while not trials.empty():
         

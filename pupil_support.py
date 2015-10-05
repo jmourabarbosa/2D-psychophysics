@@ -79,6 +79,7 @@ class Pupil(object):
 			else:
 				self.gaze_data+=items
 
+		print "going to write log"
 		self.write_log()
 
 	def write_log(self):
@@ -90,9 +91,10 @@ class Pupil(object):
 		p_fid = open(log_name+'_pupil.pickle','w')
 		g_fid = open(log_name+'_gaze.pickle','w')
 
+		print "recording ",log_name+'_pupil.pickle'
 		dump(self.pupil_data,p_fid)
 		dump(self.pupil_data,g_fid) 
-
+		print "recorded. closing."
 		p_fid.close()
 		g_fid.close()  
 
