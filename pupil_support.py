@@ -74,10 +74,10 @@ class Pupil(object):
 			items = msg.split("\n") 
 			msg_type = items.pop(0)   
 			if msg_type == 'Pupil':
-			    self.pupil_data+=items
+			    self.pupil_data+=[items]
 	
 			else:
-				self.gaze_data+=items
+				self.gaze_data+=[items]
 
 		print "going to write log"
 		self.write_log()
