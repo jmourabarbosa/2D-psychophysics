@@ -8,10 +8,11 @@ from random import randrange,choice,shuffle
 import sys
 import os
 
+
 # TRIAL TYPES
 CTRL=0
-CW=1
-CCW=2
+CW=2
+CCW=1
 
 IN=3
 OUT=4
@@ -56,14 +57,14 @@ def genPos(quadrant):
     angle=randrange(ri,rf,1)+Q
     return np.mod(angle,360)
 
-def genCW(quadrant,R,delta):
+def genCCW(quadrant,R,delta):
     ring1=R
     probe=genPos(quadrant)
     neigh=probe-delta
     ring2=choice(Rs)
     return [ring1,probe,ring1,neigh]
     
-def genCCW(quadrant,R,delta):
+def genCW(quadrant,R,delta):
     ring1=R
     probe=genPos(quadrant)
     neigh=probe+delta

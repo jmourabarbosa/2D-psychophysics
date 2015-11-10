@@ -41,7 +41,7 @@ def toCar(r,deg):
     return (x,y)
 
 def getAngle(v):
-    a=math.atan2(v[0],v[1])
+    a=math.atan2(v[1],v[0])
     return 180*a/math.pi
 
 def say_msg(message,duration,win):
