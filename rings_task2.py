@@ -265,8 +265,8 @@ if __name__ == "__main__":
         ts_e = time()
         mtime = trialClock.getTime()
         choice_pos=stim1.pos - pos
-        choice_angle=getAngle(pos)-getAngle(stim1.pos)
-        choice_R=norm(pos)-(thisTrial['ring1'])
+        choice_angle=getAngle(stim1.pos) - getAngle(pos)
+        choice_R=(thisTrial['ring1']) - norm(pos)
         
      
         trials.add_data('choice_x', choice_pos[0])
