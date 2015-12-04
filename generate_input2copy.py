@@ -158,10 +158,11 @@ if __name__ == "__main__":
             trials.append(d+[types[i]]+gens[i](q,Rs[2],delta_t[2])) # R1 dr2
 
             # Controls
-            trials.append(d+[CTRL]+genCtr(q,Rs[0]))
-            trials.append(d+[CTRL]+genCtr(q,Rs[1]))
-            trials.append(d+[CTRL]+genCtr(q,Rs[2]))
-
+            for _ in range(3):
+                trials.append(d+[CTRL]+genCtr(q,Rs[0]))
+                trials.append(d+[CTRL]+genCtr(q,Rs[1]))
+                trials.append(d+[CTRL]+genCtr(q,Rs[2]))
+                
     shuffle(trials)
     shuffle(trials)
 
