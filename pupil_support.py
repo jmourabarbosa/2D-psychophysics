@@ -5,7 +5,6 @@ import zmq
 import numpy as np
 from multiprocessing import Process, Value,Array
 from time import sleep,time
-from TrialHandler2 import TrialHandler2
 
 
 class Pupil(object):
