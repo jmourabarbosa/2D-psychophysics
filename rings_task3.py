@@ -21,7 +21,7 @@ fullscr=False
 FIXATION=1
 PRESENTATION=1
 
-colors=['green','blue','white', 'red', 'gold', 'Orange', 'Purple']
+colors=['green','blue','white', 'red', 'gold', 'Purple']
 
 # TRIAL TYPES
 CTRL=0
