@@ -15,7 +15,7 @@ from pupil_support import *
 
 mouse_on=False
 dim_x=dim_y=800
-fullscr=False
+fullscr=True
 
 # TIMES
 FIXATION=1
